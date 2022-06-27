@@ -36,8 +36,7 @@ class RestaurantAllProduct(APIView):
         
     def get(self, request, restaurant_slug, format=None):
         product = self.get_object(restaurant_slug)
-        import pdb;pdb.set_trace()
-        serializer = ProductSerializer(product, many=True)
+        serializer = RestaurantProductSerializer(product, many=True)
         return Response(serializer.data)
 
 class CategoryDetail(APIView):
@@ -56,10 +55,11 @@ class CategoryDetail(APIView):
 @api_view(["POST"])
 def search(request):
     query = request.data.get('query', "")
-
     if query:
         products = Product.get_all_products().filter(
-            Q(name__icontains=query) | Q(description__icontains=query) | Q(restaurant__icontains=query))
+                Q(name__icontains=query) | Q(description__icontains=query) 
+              | Q(restaurant__name__icontains=query) | Q(category__name__icontains=query))
+              
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
@@ -71,7 +71,6 @@ class ProductAdded(APIView):
     # permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        import pdb; pdb.set_trace()
         if self.user.is_staff == True:
             pass
 

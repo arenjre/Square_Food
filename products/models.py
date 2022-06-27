@@ -1,3 +1,4 @@
+from re import sub
 from tokenize import blank_re
 from django.db import models
 from io import BytesIO
@@ -6,7 +7,17 @@ from django.core.files import File
 from restaurant.models import Restaurant
 # Create your models here.
 
+cat_choice = (
+    ("veg", "Veg"),
+    ("vegan", "Vegan"),
+    ("non-veg", "Non-veg")
+)
+class SubCategory(models.Model):
+    name = models.CharField(choices=cat_choice, max_length=50)
 
+    def __str__(self) -> str:
+        return self.name
+        
 class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField()
@@ -30,9 +41,10 @@ class Product(models.Model):
     image = models.ImageField(upload_to="images/product/", blank=True, null=True)
     thumbnail = models.ImageField(upload_to="images/product/", blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="product")
+    sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name="product")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
-
+    
     def __str__(self) -> str:
         return self.name
 
@@ -44,9 +56,9 @@ class Product(models.Model):
         ordering = ['-date_added']
     
     def get_absolute_url(self):
-        return({"category":f"http://127.0.0.1:8000/api/product/{self.category.slug}/{self.slug}/",
-            "restaurant": f"http://127.0.0.1:8000/api/product/{self.restaurant.slug}/"
-        })
+        return f"http://127.0.0.1:8000/api/product/{self.category.slug}/{self.slug}/",
+         
+        
 
     # def get_restaurant_url(self):
     #     return f"http://127.0.0.1:8000/api/product/{self.restaurant.slug}/"
