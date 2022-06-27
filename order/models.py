@@ -4,14 +4,16 @@ import email
 from itertools import product
 from ssl import create_default_context
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
 from products.models import Product
 from restaurant.models import Restaurant
 # Create your models here.
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), related_name='orders', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)

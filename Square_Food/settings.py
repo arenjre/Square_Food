@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "products",
     "order",
     "restaurant",
-    
+    "userprofile",    
 ]
 
 MIDDLEWARE = [
@@ -57,6 +57,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 
 ]
+
+AUTH_USER_MODEL = 'userprofile.CustomUser'
 
 ROOT_URLCONF = 'Square_Food.urls'
 
@@ -130,3 +132,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

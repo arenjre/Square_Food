@@ -1,12 +1,13 @@
 from ctypes import addressof
 from django.db import models
-from django.contrib.auth.models import User
-from userprofile.models import UserProfile
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
 # Create your models here.
 
 
 class Restaurant(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     favorite = models.BooleanField(default=False)

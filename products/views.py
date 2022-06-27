@@ -58,7 +58,7 @@ def search(request):
     if query:
         products = Product.get_all_products().filter(
                 Q(name__icontains=query) | Q(description__icontains=query) 
-              | Q(restaurant__name__icontains=query) | Q(category__name__icontains=query))
+              | Q(restaurant__name__icontains=query) | Q(category__slug__icontains=query) | Q(sub_category__name__icontains=query))
               
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
