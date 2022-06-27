@@ -3,6 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.db.models import Q
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+
 
 # Create your views here.
 
@@ -22,6 +25,19 @@ class ProductDetail(APIView):
     def get(self, request, category_slug, product_slug, format=None):
         product = self.get_object(category_slug, product_slug)
         serializer = ProductSerializer(product)
+        return Response(serializer.data) 
+
+class RestaurantAllProduct(APIView):
+    def get_object(self, restaurant_slug):
+        try:
+            return Product.objects.filter(restaurant__slug = restaurant_slug)
+        except Product.DoesNotExist:
+            raise Http404
+        
+    def get(self, request, restaurant_slug, format=None):
+        product = self.get_object(restaurant_slug)
+        import pdb;pdb.set_trace()
+        serializer = ProductSerializer(product, many=True)
         return Response(serializer.data)
 
 class CategoryDetail(APIView):
@@ -42,12 +58,23 @@ def search(request):
     query = request.data.get('query', "")
 
     if query:
-        products = Product.get_all_products().filter(Q(name__icontains=query) | Q(description__icontains=query))
+        products = Product.get_all_products().filter(
+            Q(name__icontains=query) | Q(description__icontains=query) | Q(restaurant__icontains=query))
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
     else:
         return Response({"products":[]})
+
+
+class ProductAdded(APIView):
+    # permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
+        if self.user.is_staff == True:
+            pass
+
 
 
 

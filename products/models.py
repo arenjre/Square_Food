@@ -3,7 +3,7 @@ from django.db import models
 from io import BytesIO
 from PIL import Image
 from django.core.files import File
-
+from restaurant.models import Restaurant
 # Create your models here.
 
 
@@ -30,6 +30,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="images/product/", blank=True, null=True)
     thumbnail = models.ImageField(upload_to="images/product/", blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="product")
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -43,7 +44,12 @@ class Product(models.Model):
         ordering = ['-date_added']
     
     def get_absolute_url(self):
-        return f"http://127.0.0.1:8000/api/product/{self.category.slug}/{self.slug}/"
+        return({"category":f"http://127.0.0.1:8000/api/product/{self.category.slug}/{self.slug}/",
+            "restaurant": f"http://127.0.0.1:8000/api/product/{self.restaurant.slug}/"
+        })
+
+    # def get_restaurant_url(self):
+    #     return f"http://127.0.0.1:8000/api/product/{self.restaurant.slug}/"
     
     def get_image(self):
         if self.image:

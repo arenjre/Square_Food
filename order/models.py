@@ -6,6 +6,7 @@ from ssl import create_default_context
 from django.db import models
 from django.contrib.auth.models import User
 from products.models import Product
+from restaurant.models import Restaurant
 # Create your models here.
 
 
@@ -20,7 +21,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=12)
     created_at = models.DateTimeField(auto_now_add=True)
     paid_amount = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    stripe_token = models.CharField(max_length=100)
+    # stripe_token = models.CharField(max_length=100)
 
     class Meta:
         ordering = ('-created_at',)
@@ -36,6 +37,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     rate = models.IntegerField(default=0)
 
