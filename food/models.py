@@ -33,6 +33,9 @@ class Restaurant(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     favorite = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return self.name
+
 class Food(models.Model):
     title = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -53,14 +56,33 @@ class Payment(models.Model):
     transaction_id = models.UUIDField(default=generateUUID, editable=False)
     transaction_status = models.BooleanField(default=False)
 
-class Cart(models.Model):
-    user = models.ForeignKey(User, related_name="cart", on_delete=models.CASCADE)
-    items = models.ManyToManyField(Food)
-    total_cost = models.IntegerField()
+
 
 class Order(models.Model):
-    item = models.ForeignKey(Food, related_name="order", on_delete=models.CASCADE)
+    item = models.ManyToManyField(Food, related_name="order")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.IntegerField()
     
+    @classmethod
+    def from_db(cls, db, field_names, values):
+        instance = super().from_db(db, field_names, values)
+        # save original values, when model is loaded from database,
+        # in a separate attribute on the model
+        instance._loaded_values = dict(zip(field_names, values))
+        
+        return instance
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, related_name="cart", on_delete=models.CASCADE)
+    items = models.ManyToManyField(Order)
+    total_cost = models.IntegerField()
+
+    @classmethod
+    def from_db(cls, db, field_names, values):
+        instance = super().from_db(db, field_names, values)
+        # save original values, when model is loaded from database,
+        # in a separate attribute on the model
+        instance._loaded_values = dict(zip(field_names, values))
+        
+        return instance
