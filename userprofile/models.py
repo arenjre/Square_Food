@@ -10,20 +10,6 @@ from django.contrib.auth import get_user_model
 
 # Create your models here.
 
-# class UserProfile(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
-#     address = models.CharField(max_length=255)
-#     phone = models.CharField(max_length=13)
-#     avtar = models.ImageField(upload_to="images/avtar", default="images/avtar/User-Profile.png")
-    
-#     def __str__(self):
-#         return self.user.username
-
-
-
-
-
-
 class CustomUser(AbstractBaseUser):
     username = None
     id = models.AutoField(primary_key=True)
@@ -33,7 +19,7 @@ class CustomUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     address = models.CharField(max_length=255, null=True, blank=True)
-    password = models.CharField(max_length=255, editable=False)
+    # password = models.CharField(max_length=255, editable=False)
     mobile = models.CharField(max_length=13)
     avtar = models.ImageField(upload_to="images/avtar", default="images/avtar/User-Profile.png")
 
@@ -51,3 +37,5 @@ class CustomUser(AbstractBaseUser):
     def __str__(self):
         return self.email
     
+
+

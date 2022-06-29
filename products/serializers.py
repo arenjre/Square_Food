@@ -42,3 +42,10 @@ class CategorySerializer(serializers.ModelSerializer):
             "get_absolute_url",
             'product',
         )
+
+class AddProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+        

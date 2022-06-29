@@ -31,7 +31,6 @@ class Category(models.Model):
     def get_absolute_url(self):
         return f"/{self.slug}/"
     
-    
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -81,7 +80,6 @@ class Product(models.Model):
         img = Image.open(image)
         img.convert("RGB")
         img.thumbnail(size)
-
         thumb_to = BytesIO()
         img.save(thumb_to, "JPEG", quality=85)
         thumbnail = File(thumb_to, name=image.name)

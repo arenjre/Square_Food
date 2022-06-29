@@ -12,6 +12,7 @@ class Restaurant(models.Model):
     address = models.CharField(max_length=255)
     favorite = models.BooleanField(default=False)
     slug = models.SlugField()
+    Is_varified = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.name
@@ -22,3 +23,9 @@ class Restaurant(models.Model):
     def get_absolute_url(self):
         return f"http://127.0.0.1:8000/api/product/{self.slug}/"
     
+class ListedRestaurants(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.restaurant.name
